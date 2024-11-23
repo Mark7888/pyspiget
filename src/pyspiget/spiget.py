@@ -32,15 +32,24 @@ class ResourceFile:
         self.url: str = data.get('url')
         self.external_url: str = data.get('externalUrl')
 
+    def __str__(self):
+        return f"ResourceFile(type={self.type}, size={self.size}{self.size_unit}, url={self.url}, external_url={self.external_url})"
+
 class Icon:
     def __init__(self, data: dict):
         self.url: str = data.get('url')
         self.data: str = data.get('data')
 
+    def __str__(self):
+        return f"Icon(url={self.url})"
+
 class ResourceRating:
     def __init__(self, data: dict):
         self.count: int = data.get('count')
         self.average: float = data.get('average')
+
+    def __str__(self):
+        return f"ResourceRating(count={self.count}, average={self.average})"
 
 class Author(BaseModel):
     def __init__(self, data: dict):
@@ -48,10 +57,16 @@ class Author(BaseModel):
         self.name: str = data.get('name')
         self.icon: Icon = Icon(data.get('icon', {})) if data.get('icon') else None
 
+    def __str__(self):
+        return f"Author(id={self.id}, name={self.name}, icon={self.icon})"
+
 class Category(BaseModel):
     def __init__(self, data: dict):
         self.id: int = data.get('id')
         self.name: str = data.get('name')
+
+    def __str__(self):
+        return f"Category(id={self.id}, name={self.name})"
 
 class ResourceVersion(BaseModel):
     def __init__(self, data: dict):
@@ -62,6 +77,9 @@ class ResourceVersion(BaseModel):
         self.downloads: int = data.get('downloads')
         self.rating: ResourceRating = ResourceRating(data.get('rating', {})) if data.get('rating') else None
 
+    def __str__(self):
+        return f"ResourceVersion(id={self.id}, uuid={self.uuid}, name={self.name}, release_date={self.release_date}, downloads={self.downloads}, rating={self.rating})"
+
 class ResourceUpdate(BaseModel):
     def __init__(self, data: dict):
         self.id: int = data.get('id')
@@ -71,6 +89,9 @@ class ResourceUpdate(BaseModel):
         self.date: datetime = datetime.fromtimestamp(data.get('date', 0))
         self.likes: int = data.get('likes')
 
+    def __str__(self):
+        return f"ResourceUpdate(id={self.id}, resource={self.resource}, title={self.title}, description={self.description}, date={self.date}, likes={self.likes})"
+
 class ResourceReview(BaseModel):
     def __init__(self, data: dict):
         self.author: Author = Author(data.get('author', {})) if data.get('author') else None
@@ -79,6 +100,9 @@ class ResourceReview(BaseModel):
         self.response_message: str = self.decode_base64(data.get('responseMessage'))
         self.version: str = data.get('version')
         self.date: datetime = datetime.fromtimestamp(data.get('date', 0))
+
+    def __str__(self):
+        return f"ResourceReview(author={self.author}, rating={self.rating}, message={self.message}, response_message={self.response_message}, version={self.version}, date={self.date})"
 
 class Resource(BaseModel):
     def __init__(self, data: dict):
@@ -103,6 +127,13 @@ class Resource(BaseModel):
         self.documentation: str = self.decode_base64(data.get('documentation'))
         self.source_code_link: str = data.get('sourceCodeLink')
         self.donation_link: str = data.get('donationLink')
+
+    def __str__(self):
+        return (f"Resource(id={self.id}, name={self.name}, tag={self.tag}, contributors={self.contributors}, likes={self.likes}, "
+                f"file={self.file}, tested_versions={self.tested_versions}, links={self.links}, rating={self.rating}, "
+                f"release_date={self.release_date}, update_date={self.update_date}, downloads={self.downloads}, external={self.external}, "
+                f"icon={self.icon}, premium={self.premium}, price={self.price}, currency={self.currency}, "
+                f"source_code_link={self.source_code_link}, donation_link={self.donation_link})")
 
 # Main class for interacting with the Spiget API
 class Spiget:
